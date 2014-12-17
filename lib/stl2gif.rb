@@ -65,7 +65,7 @@ module Stl2gif
     end
 
     def to_gif(gif_file)
-      animation = Magick::ImageList.new(frames.sort)
+      animation = Magick::ImageList.new(*frames.sort)
       animation.delay = 16
       animation.write(gif_file)
     end
