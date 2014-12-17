@@ -9,7 +9,7 @@ module Stl2gif
     end
 
     def to_pov
-      "mesh { #{triangles.map(&:to_pov).join(', ')} }"
+      "mesh { #{triangles.map(&:to_pov).join(' ')} }"
     end
   end
 end
