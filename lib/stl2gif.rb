@@ -71,8 +71,8 @@ module Stl2gif
     end
 
     def clear_temp_files
-      FileUtils.rm_rf Dir.glob("#{options[:frames_dir]}/*")
-      FileUtils.rm options[:pov_path]
+      FileUtils.rm_rf Dir.glob("#{options[:frames_dir]}")
+      FileUtils.rm_f options[:pov_path]
     end
   end
 end
