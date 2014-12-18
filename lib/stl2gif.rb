@@ -8,20 +8,19 @@ require 'stl2gif/mesh'
 
 module Stl2gif
   class Stl
-    attr_reader :file, :options, :mesh
-    attr_writer :mesh
+    attr_reader :file, :options
+    attr_accessor :mesh, :frames
 
     # SEC-WARN: no option input can be user provided
     def initialize(file, options = {})
       @file = file
       @mesh = load_mesh
+      @frames = []
 
       @options = {}
-      @options[:frames_dir] = options[:frames_dir] || '/tmp/stl2gif_images'
       @options[:template] = options[:template] || File.expand_path('../stl2gif/template.pov', __FILE__)
       @options[:width] = options[:width] || '300'
       @options[:height] = options[:height] || '300'
-      @options[:pov_path] = options[:pov_path] || '/tmp/scene.pov'
     end
 
     def to_pov
@@ -39,23 +38,21 @@ module Stl2gif
 
     # rotation: angle in radians (pi radians is half a turn)
     def render_frame(rotation)
-      Dir.mkdir(options[:frames_dir]) unless File.directory?(options[:frames_dir])
-      pov = Mustache.render(template, :modelData => to_pov, :phi => rotation)
-      File.write(options[:pov_path], pov)
-      system("povray -i#{options[:pov_path]} +FN +W#{options[:width]} "+
-        "+H#{options[:height]} -o#{options[:frames_dir]}/#{frame_number}.png +Q9 +AM1 +A +UA")
+      Tempfile.create 'pov' do |pov|
+        pov.write(Mustache.render(template, modelData: to_pov, phi: rotation))
+        pov.flush
+
+        frame = Tempfile.new ['frame', '.png']
+
+        system("povray -i#{pov.path} +FN +W#{options[:width]} "+
+          "+H#{options[:height]} -o#{frame.path} +Q9 +AM1 +A +UA")
+
+        frames << frame
+      end
     end
 
     def template
       File.read(options[:template])
-    end
-
-    def frames
-      Dir["#{options[:frames_dir]}/*.png"]
-    end
-
-    def frame_number
-      frames.size.to_s.rjust(2, '0')
     end
 
     def generate_frames
@@ -65,14 +62,16 @@ module Stl2gif
     end
 
     def to_gif(gif_file)
-      animation = Magick::ImageList.new(*frames.sort)
-      animation.delay = 16
-      animation.write(gif_file)
-    end
-
-    def clear_temp_files
-      FileUtils.rm_rf Dir.glob("#{options[:frames_dir]}")
-      FileUtils.rm_f options[:pov_path]
+      begin
+        animation = Magick::ImageList.new *frames.map(&:path)
+        animation.delay = 16
+        animation.write(gif_file)
+      ensure
+        frames.each do |f|
+          f.close
+          f.unlink
+        end
+      end
     end
   end
 end
