@@ -31,7 +31,7 @@ describe Stl2gif do
     it 'converts to gif' do
       subject.to_gif 'test.gif'
 
-      File.exists?('test.gif').must_be true
+      File.exists?('test.gif').must_equal true
     end
   end
 end

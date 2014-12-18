@@ -1,25 +1,24 @@
 require 'stl'
 require 'mustache'
 require 'RMagick'
-include Magick
-require "stl2gif/version"
-require "stl2gif/point"
-require "stl2gif/triangle"
-require "stl2gif/mesh"
+require 'stl2gif/version'
+require 'stl2gif/point'
+require 'stl2gif/triangle'
+require 'stl2gif/mesh'
 
 module Stl2gif
   class Stl
     attr_reader :file, :options, :mesh
     attr_writer :mesh
 
-    # SEC-WARN: no option input can be user provided 
+    # SEC-WARN: no option input can be user provided
     def initialize(file, options = {})
       @file = file
       @mesh = load_mesh
 
       @options = {}
       @options[:frames_dir] = options[:frames_dir] || '/tmp/stl2gif_images'
-      @options[:template] = options[:template] || File.expand_path('../stl2gif/template.pov',__FILE__)
+      @options[:template] = options[:template] || File.expand_path('../stl2gif/template.pov', __FILE__)
       @options[:width] = options[:width] || '300'
       @options[:height] = options[:height] || '300'
       @options[:pov_path] = options[:pov_path] || '/tmp/scene.pov'
@@ -66,14 +65,14 @@ module Stl2gif
     end
 
     def to_gif(gif_file)
-      animation = ImageList.new(frames.sort)
+      animation = Magick::ImageList.new(*frames.sort)
       animation.delay = 16
       animation.write(gif_file)
-    end 
+    end
 
     def clear_temp_files
-      FileUtils.rm_rf Dir.glob("#{options[:frames_dir]}/*")
-      FileUtils.rm options[:pov_path]
+      FileUtils.rm_rf Dir.glob("#{options[:frames_dir]}")
+      FileUtils.rm_f options[:pov_path]
     end
   end
 end

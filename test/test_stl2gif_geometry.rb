@@ -27,7 +27,7 @@ describe Stl2gif do
 
     it 'returns pov' do
       subject.to_pov.must_equal 'mesh { ' +
-        'triangle { <1,0,0>, <0,1,0>, <0,0,1> }, ' +
+        'triangle { <1,0,0>, <0,1,0>, <0,0,1> } ' +
         'triangle { <-1,0,0>, <0,-1,0>, <0,0,-1> } }'
     end
   end
