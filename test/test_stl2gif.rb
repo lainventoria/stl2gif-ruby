@@ -14,18 +14,8 @@ describe Stl2gif do
       subject.render_frame 0.5 * Math::PI
     end
 
-    after do
-      subject.clear_temp_files
-    end
-
     it 'generates frames' do
       subject.frames.size.must_equal 3
-    end
-
-    it 'clears frames' do
-      subject.clear_temp_files
-
-      subject.frames.size.must_equal 0
     end
 
     it 'converts to gif' do
