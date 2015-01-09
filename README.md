@@ -29,7 +29,8 @@ Or install it yourself as:
 
     s = Stl2gif.Stl.new('test/fixtures/test.stl')
     s.generate_frames
-    s.to_gif('test.gif')
+    # temp_gif is a tempfile
+    temp_gif = s.to_gif('test')
 
 ## Contributing
 

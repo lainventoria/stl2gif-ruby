@@ -61,10 +61,11 @@ module Stl2gif
       end
     end
 
-    def to_gif(gif_file)
+    def to_gif(basename)
       begin
         animation = Magick::ImageList.new *frames.map(&:path)
         animation.delay = 16
+        gif_file = Tempfile.new [basename, '.gif']
         animation.write(gif_file)
       ensure
         frames.each do |f|
@@ -72,6 +73,7 @@ module Stl2gif
           f.unlink
         end
       end
+      gif_file
     end
   end
 end
