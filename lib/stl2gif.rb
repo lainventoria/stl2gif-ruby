@@ -66,7 +66,7 @@ module Stl2gif
         animation = Magick::ImageList.new *frames.map(&:path)
         animation.delay = 16
         gif_file = Tempfile.new [basename, '.gif']
-        animation.write(gif_file)
+        animation.write(gif_file.path)
       ensure
         frames.each do |f|
           f.close

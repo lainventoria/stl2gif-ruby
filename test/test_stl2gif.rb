@@ -19,9 +19,9 @@ describe Stl2gif do
     end
 
     it 'converts to gif' do
-      subject.to_gif 'test.gif'
+      gif_file = subject.to_gif 'test'
 
-      File.exists?('test.gif').must_equal true
+      File.exists?(gif_file.path).must_equal true
     end
   end
 end
