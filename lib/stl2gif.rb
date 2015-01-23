@@ -21,6 +21,7 @@ module Stl2gif
       @options[:template] = options[:template] || File.expand_path('../stl2gif/template.pov', __FILE__)
       @options[:width] = options[:width] || '300'
       @options[:height] = options[:height] || '300'
+      @options[:step] = options[:step] || 8
     end
 
     def to_pov
