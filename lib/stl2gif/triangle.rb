@@ -4,6 +4,7 @@ module Stl2gif
 
     def initialize(points)
       points = points.points if points.is_a? Geometry::ScaleneTriangle
+      points = points.points if points.is_a? STL::Face
       @point_1 = Point.new(points[0])
       @point_2 = Point.new(points[1])
       @point_3 = Point.new(points[2])

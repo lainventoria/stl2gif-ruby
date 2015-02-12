@@ -33,8 +33,7 @@ module Stl2gif
     end
 
     def load_stl
-      # f[0] is the normal and not needed, f[1] is the triangle
-      STL.read(file).map {|f| f[1]}
+      STL.read(file)
     end
 
     # rotation: angle in radians (pi radians is half a turn)

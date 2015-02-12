@@ -2,8 +2,9 @@ module Stl2gif
   class Mesh
     attr_accessor :triangles
 
-    def initialize(triangles)
-      @triangles = triangles.map do |triangle|
+    def initialize(faces)
+      faces = faces.faces if faces.is_a? STL
+      @triangles = faces.map do |triangle|
         Triangle.new(triangle)
       end
     end
